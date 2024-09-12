@@ -30,27 +30,28 @@ resource "aws_security_group" "Jenkins-sg" {
 }
 
 
-resource "aws_instance" "web" {
-  ami                    = "ami-0c7217cdde317cfec"
+resource "aws_instance" "jenkins" {
+  ami                    = "ami-07a0715df72e58928"
   instance_type          = "t2.large"
-  key_name               = "my key"
+  key_name               = "web-key"
   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
   user_data              = templatefile("./install_jenkins.sh", {})
 
   tags = {
-    Name = "amazon clone"
+    Name = "jenkins-server"
   }
   root_block_device {
     volume_size = 30
   }
 }
-resource "aws_instance" "web2" {
-  ami                    = "ami-0c7217cdde317cfec"
+
+resource "aws_instance" "monitoring" {
+  ami                    = "ami-07a0715df72e58928"
   instance_type          = "t2.medium"
-  key_name               = "my key"
+  key_name               = "web-key"
   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
   tags = {
-    Name = "Monitering via grafana"
+    Name = "Monitering-server"
   }
   root_block_device {
     volume_size = 30

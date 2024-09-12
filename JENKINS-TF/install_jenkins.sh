@@ -14,6 +14,44 @@ sudo apt-get install jenkins -y
 sudo systemctl start jenkins
 sudo systemctl status jenkins
 
+#Install Nginx
+sudo apt install nginx -y
+rm -rf /etc/nginx/sites-enabled/default
+rm -rf /etc/nginx/sites-available/default
+
+#Set Nginx as a reverse proxy
+sudo cat <<EOT > /etc/nginx/sites-available/nginx
+server {
+    listen 80;
+    server_name jenkins.com;  # Replace with your domain or IP address
+
+    access_log  /var/log/nginx/sonar.access.log;
+    error_log   /var/log/nginx/sonar.error.log;
+
+    proxy_buffers 16 64k;
+    proxy_buffer_size 128k;
+    # Location block for reverse proxying
+    
+    location / {
+        # Define the proxy pass (backend server)
+        proxy_pass http://127.0.0.1:8080;  # Replace with the address of your backend server
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+
+        # Set proxy headers
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto http;
+    }
+}
+EOT
+
+sudo ln -s /etc/nginx/sites-available/nginx /etc/nginx/sites-enabled/nginx
+systemctl enable nginx.service
+systemctl restart nginx.service
+sudo ufw allow 80,8080/tcp
+
 #install docker
 sudo apt-get update
 sudo apt-get install docker.io -y
@@ -44,14 +82,14 @@ sudo apt update
 sudo apt install -y nodejs
 
 # Install Terraform
-sudo apt install wget -y
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
+# sudo apt install wget -y
+# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+# sudo apt update && sudo apt install terraform
 
 # Install kubectl
-sudo apt update
-sudo apt install curl -y
-curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-kubectl version --client
+# sudo apt update
+# sudo apt install curl -y
+# curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+# sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# kubectl version --client
