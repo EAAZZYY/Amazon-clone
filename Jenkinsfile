@@ -49,8 +49,7 @@ pipeline{
                 script{
                    withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]){   
                         sh '''echo "$PASSWORD" | docker login -u "$USER" --password-stdin'''
-                        sh "docker build -t eaazzyy/amazon-clone ."
-                        sh "docker amazon-clone eaazzyy/amazon-clone:latest "
+                        sh "docker build -t eaazzyy/amazon-clone:latest ."
                         sh "docker push eaazzyy/amazon-clone:latest"
                     }
                 }
