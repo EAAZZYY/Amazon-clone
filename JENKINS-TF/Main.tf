@@ -4,7 +4,7 @@ resource "aws_security_group" "Jenkins-sg" {
 
   # Define a single ingress rule to allow traffic on all specified ports
   ingress = [
-    for port in [22, 80, 443, 8080, 9000,9100,9090,3000] : {
+    for port in [22, 80, 443, 8080, 9000, 9100, 9090, 3000] : {
       description      = "TLS from VPC"
       from_port        = port
       to_port          = port
@@ -32,7 +32,7 @@ resource "aws_security_group" "Jenkins-sg" {
 
 resource "aws_instance" "jenkins" {
   ami                    = "ami-07a0715df72e58928"
-  instance_type          = "t2.large"
+  instance_type          = "t3.large"
   key_name               = "web-key"
   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
   user_data              = templatefile("./install_jenkins.sh", {})
@@ -47,7 +47,7 @@ resource "aws_instance" "jenkins" {
 
 resource "aws_instance" "monitoring" {
   ami                    = "ami-07a0715df72e58928"
-  instance_type          = "t2.medium"
+  instance_type          = "t3.medium"
   key_name               = "web-key"
   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
   tags = {
