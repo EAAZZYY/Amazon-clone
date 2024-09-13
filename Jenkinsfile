@@ -65,6 +65,16 @@ pipeline{
                 sh 'docker run -d --name amazon-clone -p 3000:3000 eaazzyy/amazon-clone:latest'
             }
         }
+
+        stage("Deploy to Kubernetes cluster") {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials("jenkins_access_key")
+                AWS_SECRET_ACCESS_KEY = credentials("jenkins_secret_access_key")
+            }
+            steps {
+                sh 'kubectl create deployment nginx-deployment --image=nginx'
+            }
+        }
         stage('clean workspace'){
             steps{
                 cleanWs()

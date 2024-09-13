@@ -45,15 +45,15 @@ resource "aws_instance" "jenkins" {
   }
 }
 
-resource "aws_instance" "monitoring" {
-  ami                    = "ami-07a0715df72e58928"
-  instance_type          = "t3.medium"
-  key_name               = "web-key"
-  vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
-  tags = {
-    Name = "Monitering-server"
-  }
-  root_block_device {
-    volume_size = 30
-  }
-}
+# resource "aws_instance" "monitoring" {
+#   ami                    = "ami-07a0715df72e58928"
+#   instance_type          = "t3.medium"
+#   key_name               = "web-key"
+#   vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
+#   tags = {
+#     Name = "Monitering-server"
+#   }
+#   root_block_device {
+#     volume_size = 30
+#   }
+# }
