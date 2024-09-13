@@ -18,7 +18,7 @@ pipeline{
             }
             steps {
                 dir("../kubernetes") {
-                    sh 'kubectl apply -f ../kubernetes/deployment.yaml'
+                    sh 'kubectl apply -f deployment.yaml'
                 }
             }
         }
