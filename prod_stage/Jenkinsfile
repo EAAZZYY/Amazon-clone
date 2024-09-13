@@ -17,7 +17,7 @@ pipeline{
                 AWS_SECRET_ACCESS_KEY = credentials("jenkins_secret_access_key")
             }
             steps {
-                dir("../kubernetes") {
+                dir("kubernetes") {
                     sh 'kubectl apply -f deployment.yaml'
                 }
             }
