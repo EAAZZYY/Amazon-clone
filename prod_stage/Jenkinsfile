@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    tools{
+        jdk 'temurinJDK'
+        nodejs 'NodeJS'
+    }
+    stages {
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'main', url: 'https://github.com/EAAZZYY/Amazon-clone.git'
+            }
+        }
+
+        stage("Deploy to Kubernetes cluster") {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials("jenkins_access_key")
+                AWS_SECRET_ACCESS_KEY = credentials("jenkins_secret_access_key")
+            }
+            steps {
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+    }
+}
