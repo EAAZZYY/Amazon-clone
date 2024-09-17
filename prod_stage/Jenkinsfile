@@ -18,6 +18,7 @@ pipeline{
             }
             steps {
                 dir("kubernetes") {
+                    sh 'kubectl delete -f deployment.yaml'
                     sh 'kubectl apply -f deployment.yaml'
                 }
             }

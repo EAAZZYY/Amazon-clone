@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: amazon-clone-container
-          image: amazon-clone:latest  # Replace with your application image
+          image: eaazzyy/amazon-clone:latest  # Replace with your application image
           ports:
             - containerPort: 3000  # The port your application runs on inside the container
           resources:
